@@ -5,6 +5,7 @@ Installation:
 ```shell script
 pip install --user pipenv  # if you don't have PipEnv installed 
 pipenv install
+python cli.py init-db
 ```
 
 Start a server:

@@ -1,7 +1,8 @@
 import click
 
 import config
-from bot import client
+from bot import client as discord_client
+from db import create_db_tables
 from utils import bootstrap
 
 
@@ -12,7 +13,12 @@ def cli():
 
 @cli.command()
 def start_server():
-    client.run(config.DISCORD_TOKEN)
+    discord_client.run(config.DISCORD_TOKEN)
+
+
+@cli.command()
+def init_db():
+    create_db_tables()
 
 
 if __name__ == '__main__':
