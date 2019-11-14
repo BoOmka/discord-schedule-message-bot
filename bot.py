@@ -15,7 +15,7 @@ async def on_message(message):
     if not message.content.startswith('!'):
         return
 
-    if message.content == '!pong':
+    if message.content == '!ping':
         await message.channel.send('pong')
 
 
