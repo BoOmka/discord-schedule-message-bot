@@ -2,6 +2,7 @@ import datetime as dt
 import logging
 
 import discord
+from pytube import YouTube
 
 import models
 import tasks
@@ -29,6 +30,20 @@ def delay_message(
         args=(channel_id, author_id, message),
         countdown=countdown_td.seconds,
     )
+
+
+async def schedule_yt(channel_id: int,
+                      author_id: int,
+                      youtube_url: str,
+                      desired_resolution: int = 1080):
+    """Delay message with YT url until video gets processed to desired resolution."""
+    streams = YouTube(youtube_url).streams.all()
+    message = youtube_url
+    while True:
+        for stream in streams:
+            if stream.resolution > desired_resolution:
+                target_dt = dt.datetime.now()
+                await schedule_message(channel_id, author_id, message, target_dt)
 
 
 @client.event
@@ -62,6 +77,19 @@ async def on_message(message):
 
     if message.content.startswith('!schedule '):
         # TODO: https://github.com/BoOmka/discord-schedule-message-bot/issues/1
+        return
+
+    if message.content.startswith('!scheduleyt'):
+        try:
+            _, url, resolution = message.content.split(' ', maxsplit=2)
+            asyncio.ensure_future(schedule_yt(message.channel.id,
+                                              message.author.id,
+                                              url,
+                                              resolution))
+        except ValueError as e:
+            _logger.exception(e)
+        finally:
+            await message.delete()
         return
 
 
