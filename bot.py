@@ -38,7 +38,7 @@ async def schedule_yt(
     while True:
         streams = YouTube(youtube_url).streams.all()
         for stream in streams:
-            if stream.resolution > desired_resolution:
+            if stream.resolution >= desired_resolution:
                 target_dt = dt.datetime.now()
                 await schedule_message(channel_id, author_id, message, target_dt)
                 return
