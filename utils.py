@@ -1,6 +1,10 @@
+import asyncio
 import datetime as dt
 import logging
 import logging.handlers
+from contextlib import asynccontextmanager
+
+import discord
 
 import config
 
@@ -30,3 +34,16 @@ def init_logging():
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
     root_logger.addHandler(console_handler)
+
+
+@asynccontextmanager
+async def get_discord_client():
+    client = discord.Client()
+    await client.login(token=config.DISCORD_TOKEN)
+    asyncio.ensure_future(client.connect())
+    while not client.is_ready():
+        await asyncio.sleep(0.001)
+    try:
+        yield client
+    finally:
+        await client.close()
