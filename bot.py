@@ -1,12 +1,12 @@
 import datetime as dt
+import time
 import logging
 
 import discord
 from pytube import YouTube
 
-import models
+import config
 import tasks
-from db import session
 
 
 logger = logging.getLogger(__name__)
@@ -21,29 +21,29 @@ def delay_message(
 ):
     countdown_td = dt.timedelta(minutes=countdown_minutes)
     target_dt = dt.datetime.now() + countdown_td
-
-    db_instance = models.ScheduledMessage(message=message, send_ts=target_dt)
-    session.add(db_instance)
-    session.commit()
-    session.close()
     tasks.send_message.apply_async(
-        args=(channel_id, author_id, message),
+        args=(channel_id, author_id, message, target_dt),
         countdown=countdown_td.seconds,
     )
 
 
-async def schedule_yt(channel_id: int,
-                      author_id: int,
-                      youtube_url: str,
-                      desired_resolution: int = 1080):
+async def schedule_yt(
+        channel_id: int,
+        author_id: int,
+        youtube_url: str,
+        desired_resolution: int = 1080
+):
     """Delay message with YT url until video gets processed to desired resolution."""
-    streams = YouTube(youtube_url).streams.all()
     message = youtube_url
     while True:
+        streams = YouTube(youtube_url).streams.all()
         for stream in streams:
             if stream.resolution > desired_resolution:
                 target_dt = dt.datetime.now()
                 await schedule_message(channel_id, author_id, message, target_dt)
+                return
+        time.sleep(config.SCHEDULER_SLEEP_TIME)
+        # TODO: add timeout for videos which never reach target quality
 
 
 @client.event
