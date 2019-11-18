@@ -14,6 +14,16 @@ A Discord bot for scheduling and delaying user messages
     python set_token.py %YOUR_DISCORD_APP_TOKEN%
     python cli.py init-db
     ```
+   
+1. Start Redis:
+    ```shell script
+    docker run --name redis -p 6379:6379 redis:latest
+    ```
+   
+1. Start Celery worker:
+    ```shell script
+    python cli.py start-celery-worker
+    ```
 
 1. Start a server:
     ```shell script

@@ -3,6 +3,7 @@ import click
 import config
 from bot import client as discord_client
 from db import create_db_tables
+from tasks import app
 from utils import bootstrap
 
 
@@ -19,6 +20,11 @@ def start_server():
 @cli.command()
 def init_db():
     create_db_tables()
+
+
+@cli.command()
+def start_celery_worker():
+    app.worker_main(argv=click.get_os_args())
 
 
 if __name__ == '__main__':
