@@ -17,10 +17,10 @@ A Discord bot for scheduling and delaying user messages
    
 1. Start Redis:
     ```shell script
-    docker run --name redis -p 6379:6379 redis:latest
+    docker run --name redis -p 6379:6379 -d redis:latest
     ```
 
-    4.1. For Windows users: https://redislabs.com/blog/redis-on-windows-10/
+    4.1. For Windows users: https://github.com/microsoftarchive/redis/releases
    
 1. Start Celery worker:
     ```shell script
