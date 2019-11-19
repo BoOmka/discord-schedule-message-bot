@@ -1,13 +1,9 @@
 import datetime as dt
-import time
 import logging
 
 import discord
-from pytube import YouTube
 
-import config
 import tasks
-
 
 logger = logging.getLogger(__name__)
 client = discord.Client()
@@ -20,30 +16,22 @@ def delay_message(
         countdown_minutes: float,
 ):
     countdown_td = dt.timedelta(minutes=countdown_minutes)
-    target_dt = dt.datetime.now() + countdown_td
+    target_dt = dt.datetime.utcnow() + countdown_td
     tasks.send_message.apply_async(
         args=(channel_id, author_id, message, target_dt),
         countdown=countdown_td.seconds,
     )
 
 
-async def schedule_yt(
+def schedule_yt(
         channel_id: int,
         author_id: int,
         youtube_url: str,
-        desired_resolution: int = 1080
+        resolution: int,
 ):
-    """Delay message with YT url until video gets processed to desired resolution."""
-    message = youtube_url
-    while True:
-        streams = YouTube(youtube_url).streams.all()
-        for stream in streams:
-            if stream.resolution >= desired_resolution:
-                target_dt = dt.datetime.now()
-                await schedule_message(channel_id, author_id, message, target_dt)
-                return
-        time.sleep(config.SCHEDULER_SLEEP_TIME)
-        # TODO: add timeout for videos which never reach target quality
+    tasks.send_message_yt.apply_async(
+        args=(channel_id, author_id, youtube_url, resolution)
+    )
 
 
 @client.event
@@ -82,10 +70,10 @@ async def on_message(message):
     if message.content.startswith('!scheduleyt'):
         try:
             _, url, resolution = message.content.split(' ', maxsplit=2)
-            asyncio.ensure_future(schedule_yt(message.channel.id,
-                                              message.author.id,
-                                              url,
-                                              resolution))
+            schedule_yt(message.channel.id,
+                        message.author.id,
+                        url,
+                        resolution)
         except ValueError as e:
             _logger.exception(e)
         finally:
