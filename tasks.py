@@ -28,9 +28,9 @@ def send_message(
         async with get_discord_client() as client:
             client.get_channel(channel_id)
             db_instance = models.ScheduledMessage(message=message, send_ts=target_dt)
-            # TODO: https://github.com/BoOmka/discord-schedule-message-bot/issues/2
-            # FIXME: doesn't save to DB for some reason
             session.add(db_instance)
+            session.commit()
+            session.close()
             author = client.get_user(author_id)
             msg = f'**{author.mention} said:** {message}'
             await client.get_channel(channel_id).send(msg)
