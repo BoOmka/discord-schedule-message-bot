@@ -3,7 +3,9 @@ import logging
 
 import discord
 
+import models
 import tasks
+from db import session
 
 
 logger = logging.getLogger(__name__)
@@ -18,8 +20,13 @@ def delay_message(
 ):
     countdown_td = dt.timedelta(minutes=countdown_minutes)
     target_dt = dt.datetime.now() + countdown_td
+
+    db_instance = models.ScheduledMessage(message=message, send_ts=target_dt)
+    session.add(db_instance)
+    session.commit()
+    session.close()
     tasks.send_message.apply_async(
-        args=(channel_id, author_id, message, target_dt),
+        args=(channel_id, author_id, message),
         countdown=countdown_td.seconds,
     )
 
