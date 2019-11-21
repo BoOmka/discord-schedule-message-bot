@@ -26,7 +26,7 @@ def delay_message(
     session.commit()
     session.close()
     tasks.send_message.apply_async(
-        args=(channel_id, author_id, message, target_dt),
+        args=(channel_id, author_id, message),
         countdown=countdown_td.seconds,
     )
 
