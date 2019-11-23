@@ -1,9 +1,9 @@
 import asyncio
 import datetime as dt
-import time
 
 from celery import Celery
 from pytube import YouTube
+from sqlalchemy.orm.sync import update
 
 import config
 import models
@@ -18,13 +18,11 @@ def send_message(
         channel_id: int,
         author_id: int,
         message: str,
-        target_dt: dt.datetime,
 ):
     async def _send_message(
             channel_id: int,
             author_id: int,
             message: str,
-            target_dt: dt.datetime,
     ):
         async with get_discord_client() as client:
             client.get_channel(channel_id)
@@ -40,7 +38,6 @@ def send_message(
         channel_id=channel_id,
         author_id=author_id,
         message=message,
-        target_dt=target_dt,
     ))
 
 
@@ -60,3 +57,21 @@ def send_message_yt(
             send_message.apply_async(
                 args=(channel_id, author_id, message, target_dt),
             )
+
+
+@app.task(name='celery_tasks.checkout_video_resolution')
+def checkout_video_resolution(youtube_url: str):
+    """
+    Check available resolutions
+
+    :param youtube_url: YouTube video URL
+    :return resolutions: list of available resolutions
+    """
+    streams = YouTube(youtube_url).streams.all()
+    resolutions = [stream.resolution for stream in streams]
+
+    # save to db
+    scheduled_video = session.query(models.ScheduledVideo).filter(models.ScheduledVideo.video_url == youtube_url)
+    scheduled_video.resolutions = resolutions
+    session.commit()
+    return resolutions
