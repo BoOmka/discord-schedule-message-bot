@@ -3,7 +3,9 @@ import logging
 
 import discord
 
+import models
 import tasks
+from db import session
 
 logger = logging.getLogger(__name__)
 client = discord.Client()
@@ -29,9 +31,18 @@ def schedule_yt(
         youtube_url: str,
         resolution: int,
 ):
-    tasks.send_message_yt.apply_async(
-        args=(channel_id, author_id, youtube_url, resolution)
-    )
+    """
+
+    :param channel_id: Channel from where
+    :param author_id:
+    :param youtube_url:
+    :param resolution:
+    :return:
+    """
+    db_instance = models.ScheduledVideo(video_url=youtube_url)
+    session.add(db_instance)
+    session.commit()
+    session.close()
 
 
 @client.event
