@@ -60,7 +60,7 @@ def send_message_yt(
 
 
 @app.task(name='celery_tasks.checkout_video_resolution')
-def checkout_video_resolution(youtube_url: str):
+def get_best_resolution_yt(youtube_url: str):
     """
     Check available resolutions
 
@@ -69,9 +69,10 @@ def checkout_video_resolution(youtube_url: str):
     """
     streams = YouTube(youtube_url).streams.all()
     resolutions = [stream.resolution for stream in streams]
+    max_resolution = max(resolutions)
 
     # save to db
     scheduled_video = session.query(models.ScheduledVideo).filter(models.ScheduledVideo.video_url == youtube_url)
-    scheduled_video.resolutions = resolutions
+    scheduled_video.resolution = max_resolution
     session.commit()
-    return resolutions
+    return max_resolution

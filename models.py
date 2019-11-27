@@ -25,5 +25,5 @@ class ScheduledVideo(Base):
     channel_id = Column(Integer, nullable=False)
     author_id = Column(Integer, nullable=False)
     is_sent = Column(Boolean, nullable=False, default=False)
-    resolutions = Column(ARRAY(Integer), nullable=False, default=[])
+    resolution = Column(Integer, nullable=False, default=0)
     __table_args__ = (Index('scheduled_videos_is_sent_idx', 'is_sent'),)
