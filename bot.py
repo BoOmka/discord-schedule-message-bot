@@ -42,7 +42,6 @@ def schedule_yt(
     db_instance = models.ScheduledVideo(video_url=youtube_url)
     session.add(db_instance)
     session.commit()
-    session.close()
 
 
 @client.event
