@@ -50,7 +50,7 @@ async def on_message(message):
         await message.channel.send('pong')
         return
 
-    if message.content.startswith('!delay'):
+    if message.content.startswith('!delay '):
         try:
             _, countdown_minutes, payload = message.content.split(' ', maxsplit=2)
             delay_message(message.channel.id, message.author.id, payload, float(countdown_minutes))
@@ -60,7 +60,7 @@ async def on_message(message):
             await message.delete()
         return
 
-    if message.content.startswith('!schedule'):
+    if message.content.startswith('!schedule '):
         # TODO: https://github.com/BoOmka/discord-schedule-message-bot/issues/1
         return
 
