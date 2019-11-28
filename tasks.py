@@ -66,6 +66,11 @@ def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, des
 
 
 def parse_resolution(resolution: str) -> int:
+    """
+    Convert NoneType or str to integer representation of resolution
+    :param resolution: video resolution of str type, e.g. '1080p'
+    :return resolution_int: integer representation of resolution
+    """
     if not resolution:
         return 0
     else:
