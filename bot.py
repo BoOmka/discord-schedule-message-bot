@@ -47,9 +47,14 @@ def schedule_yt(
     :param resolution:
     :return:
     """
-    db_instance = models.ScheduledVideo(video_url=youtube_url)
+    db_instance = models.ScheduledVideo(video_url=youtube_url,
+                                        channel_id=channel_id,
+                                        author_id=author_id,
+                                        desired_resolution=resolution)
     session.add(db_instance)
     session.commit()
+    tasks.send_message_yt.apply_async(
+        args=(channel_id, author_id, youtube_url, resolution))
 
 
 @client.event
@@ -88,6 +93,7 @@ async def on_message(message):
     if message.content.startswith('!scheduleyt'):
         try:
             _, url, resolution = message.content.split(' ', maxsplit=2)
+            resolution = int(resolution)
             schedule_yt(message.channel.id,
                         message.author.id,
                         url,
