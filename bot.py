@@ -20,12 +20,15 @@ def delay_message(
     countdown_td = dt.timedelta(minutes=countdown_minutes)
     target_dt = dt.datetime.utcnow() + countdown_td
 
-    db_instance = models.ScheduledMessage(message=message, send_ts=target_dt)
+    db_instance = models.ScheduledMessage(message=message,
+                                          send_ts=target_dt,
+                                          channel_id=channel_id,
+                                          author_id=author_id)
     session.add(db_instance)
     session.commit()
 
     tasks.send_message.apply_async(
-        args=(channel_id, author_id, message, target_dt),
+        args=(channel_id, author_id, message),
         countdown=countdown_td.seconds,
     )
 
