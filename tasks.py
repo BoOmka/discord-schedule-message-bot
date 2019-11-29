@@ -17,17 +17,6 @@ def send_message(
         author_id: int,
         message: str,
 ):
-    async def _send_message(
-            channel_id: int,
-            author_id: int,
-            message: str,
-    ):
-        async with get_discord_client() as client:
-            client.get_channel(channel_id)
-            author = client.get_user(author_id)
-            msg = f'**{author.mention} said:** {message}'
-            await client.get_channel(channel_id).send(msg)
-
     asyncio.run(_send_message(
         channel_id=channel_id,
         author_id=author_id,
@@ -39,17 +28,6 @@ def send_message(
 def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, desired_resolution: int):
     """Send message with YouTube url if it is of target quality or higher."""
     # TODO Reuse _send_message code for both send_message and send_message_yt
-    async def _send_message(
-            channel_id: int,
-            author_id: int,
-            message: str,
-    ):
-        async with get_discord_client() as client:
-            client.get_channel(channel_id)
-            author = client.get_user(author_id)
-            msg = f'**{author.mention} said:** {message}'
-            await client.get_channel(channel_id).send(msg)
-
     try:
         streams = YouTube(youtube_url).streams.all()
         resolutions = [parse_resolution(stream.resolution) for stream in streams]
@@ -76,3 +54,15 @@ def parse_resolution(resolution: str) -> int:
     else:
         resolution_int = int(resolution[:-1])
         return resolution_int
+
+
+async def _send_message(
+            channel_id: int,
+            author_id: int,
+            message: str,
+    ):
+    async with get_discord_client() as client:
+        client.get_channel(channel_id)
+        author = client.get_user(author_id)
+        msg = f'**{author.mention} said:** {message}'
+        await client.get_channel(channel_id).send(msg)
