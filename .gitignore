@@ -114,6 +114,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+virtualenv/
 ENV/
 env.bak/
 venv.bak/
@@ -135,3 +136,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Celery beat files
+/celerybeat-schedule.bak
+/celerybeat-schedule.dat
+/celerybeat-schedule.dir
