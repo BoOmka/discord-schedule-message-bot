@@ -4,6 +4,7 @@ from celery import Celery
 from pytube import YouTube
 
 import config
+from config import YT_RETRY_COUNTDOWN, YT_MAX_RETRIES
 from utils import get_discord_client
 
 app = Celery(main='messages', broker=config.CELERY_BROKER_URL, backend=config.CELERY_RESULT_BACKEND)
@@ -36,8 +37,7 @@ def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, des
             message=youtube_url,
         ))
     except Exception:
-        # TODO Replace hardcoded constants with configurable values
-        raise self.retry(countdown=60, max_retries=60*2)
+        raise self.retry(countdown=YT_RETRY_COUNTDOWN, max_retries=YT_MAX_RETRIES)
 
 
 def parse_resolution(resolution: str) -> int:

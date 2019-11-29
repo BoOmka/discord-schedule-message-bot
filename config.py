@@ -12,3 +12,6 @@ SCHEDULER_SLEEP_TIME = config('SCHEDULER_SLEEP_TIME', cast=float, default=1.0)
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost')
 CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost')
 CELERY_ENABLE_UTC = False
+
+YT_RETRY_COUNTDOWN = config('YT_RETRY_COUNTDOWN', default=60)  # seconds
+YT_MAX_RETRIES = config('YT_MAX_RETRIES', default=60)  # times
