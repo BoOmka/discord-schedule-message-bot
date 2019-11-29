@@ -1,11 +1,9 @@
 import asyncio
 
-from celery import Celery, group, chain
+from celery import Celery
 from pytube import YouTube
 
 import config
-import models
-from db import session
 from utils import get_discord_client
 
 app = Celery(main='messages', broker=config.CELERY_BROKER_URL, backend=config.CELERY_RESULT_BACKEND)
@@ -27,7 +25,6 @@ def send_message(
 @app.task(bind=True, default_retry_delay=60, name='celery_tasks.send_message_yt')
 def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, desired_resolution: int):
     """Send message with YouTube url if it is of target quality or higher."""
-    # TODO Reuse _send_message code for both send_message and send_message_yt
     try:
         streams = YouTube(youtube_url).streams.all()
         resolutions = [parse_resolution(stream.resolution) for stream in streams]
