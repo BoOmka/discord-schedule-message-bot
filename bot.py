@@ -3,9 +3,7 @@ import logging
 
 import discord
 
-import models
 import tasks
-from db import session
 
 logger = logging.getLogger(__name__)
 client = discord.Client()
@@ -18,15 +16,6 @@ def delay_message(
         countdown_minutes: float,
 ):
     countdown_td = dt.timedelta(minutes=countdown_minutes)
-    target_dt = dt.datetime.utcnow() + countdown_td
-
-    db_instance = models.ScheduledMessage(message=message,
-                                          send_ts=target_dt,
-                                          channel_id=channel_id,
-                                          author_id=author_id)
-    session.add(db_instance)
-    session.commit()
-
     tasks.send_message.apply_async(
         args=(channel_id, author_id, message),
         countdown=countdown_td.seconds,
@@ -47,12 +36,6 @@ def schedule_yt(
     :param resolution:
     :return:
     """
-    db_instance = models.ScheduledVideo(video_url=youtube_url,
-                                        channel_id=channel_id,
-                                        author_id=author_id,
-                                        desired_resolution=resolution)
-    session.add(db_instance)
-    session.commit()
     tasks.send_message_yt.apply_async(
         args=(channel_id, author_id, youtube_url, resolution))
 
