@@ -1,7 +1,7 @@
 import click
 
 import config
-from bot import client as discord_client
+from bot import bot as discord_client
 from tasks import app
 from utils import bootstrap
 
