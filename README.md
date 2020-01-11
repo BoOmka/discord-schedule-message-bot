@@ -12,7 +12,6 @@ A Discord bot for scheduling and delaying user messages
 1. Init:
     ```shell script
     python set_token.py %YOUR_DISCORD_APP_TOKEN%
-    python cli.py init-db
     ```
    
 1. Start Redis:
