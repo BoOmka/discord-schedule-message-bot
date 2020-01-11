@@ -28,7 +28,7 @@ async def delay(ctx, countdown_minutes: int, *, message: str):
 
 
 @scheduler.command(aliases=['yt'])
-async def youtube(ctx, youtube_url: str, resolution: int):
+async def youtube(ctx, youtube_url: str, resolution: int = 720):
     """Schedules YT video until desired resolution becomes available"""
     tasks.send_message_yt.apply_async(
         args=(ctx.message.channel.id, ctx.message.author.id, youtube_url, resolution))
