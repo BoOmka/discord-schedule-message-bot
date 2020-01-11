@@ -3,6 +3,8 @@ import asyncio
 from celery import Celery
 from pytube import YouTube
 
+from pytube.exceptions import RegexMatchError, VideoUnavailable
+
 import config
 from config import YT_RETRY_COUNTDOWN, YT_MAX_RETRIES
 from utils import get_discord_client
@@ -36,8 +38,22 @@ def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, des
             author_id=author_id,
             message=youtube_url,
         ))
-    except Exception:
+    except RegexMatchError:
+        error_message = "Video not found by url: " + youtube_url
+        asyncio.run(_send_message(
+            channel_id=channel_id,
+            author_id=author_id,
+            message=error_message,
+        ))
+    except (AssertionError, VideoUnavailable):
         raise self.retry(countdown=YT_RETRY_COUNTDOWN, max_retries=YT_MAX_RETRIES)
+    except KeyError:
+        error_message = "Pytube can't parse resolutions form this video: " + youtube_url
+        asyncio.run(_send_message(
+            channel_id=channel_id,
+            author_id=author_id,
+            message=error_message,
+        ))
 
 
 def parse_resolution(resolution: str) -> int:
