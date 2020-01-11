@@ -15,7 +15,6 @@ celery = "==4.3.0"
 redis = "==3.3.11"
 pytube = "==9.5.3"
 psycopg2 = "*"
-dateutil = "*"
 
 [requires]
 python_version = "3.7"
