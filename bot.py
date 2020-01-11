@@ -1,7 +1,9 @@
 import datetime as dt
 import logging
+import typing
 
 import discord
+from discord import TextChannel
 from discord.ext import commands
 
 import tasks
@@ -18,20 +20,26 @@ async def scheduler(ctx):
 
 
 @scheduler.command()
-async def delay(ctx, countdown_minutes: int, *, message: str):
+async def delay(ctx, countdown_minutes: int, channel: typing.Optional[TextChannel], *, message: str):
     """Delays message for passed amount of minutes"""
+    if channel is None:
+        channel = ctx.message.channel
+
     countdown_td = dt.timedelta(minutes=countdown_minutes)
     tasks.send_message.apply_async(
-        args=(ctx.message.channel.id, ctx.message.author.id, message),
+        args=(channel.id, ctx.message.author.id, message),
         countdown=countdown_td.seconds,
     )
 
 
 @scheduler.command(aliases=['yt'])
-async def youtube(ctx, youtube_url: str, resolution: int = 720):
+async def youtube(ctx, youtube_url: str, channel: typing.Optional[TextChannel], resolution: typing.Optional[int] = 720):
     """Schedules YT video until desired resolution becomes available"""
+    if channel is None:
+        channel = ctx.message.channel
+
     tasks.send_message_yt.apply_async(
-        args=(ctx.message.channel.id, ctx.message.author.id, youtube_url, resolution))
+        args=(channel.id, ctx.message.author.id, youtube_url, resolution))
 
 
 @bot.command()
