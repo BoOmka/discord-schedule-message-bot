@@ -20,7 +20,7 @@ async def scheduler(ctx):
 
 
 @scheduler.command()
-async def delay(ctx, countdown_minutes: int, channel: typing.Optional[TextChannel], *, message: str):
+async def delay(ctx, channel: typing.Optional[TextChannel], countdown_minutes: int,  *, message: str):
     """Delays message for passed amount of minutes"""
     if channel is None:
         channel = ctx.message.channel
@@ -33,7 +33,7 @@ async def delay(ctx, countdown_minutes: int, channel: typing.Optional[TextChanne
 
 
 @scheduler.command(aliases=['yt'])
-async def youtube(ctx, youtube_url: str, channel: typing.Optional[TextChannel], resolution: typing.Optional[int] = 720):
+async def youtube(ctx, channel: typing.Optional[TextChannel], youtube_url: str, resolution: typing.Optional[int] = 720):
     """Schedules YT video until desired resolution becomes available"""
     if channel is None:
         channel = ctx.message.channel
