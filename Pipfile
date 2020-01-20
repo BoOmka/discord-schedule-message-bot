@@ -13,7 +13,7 @@ python-decouple = "==3.3"
 click = "==7.0"
 celery = "==4.3.0"
 redis = "==3.3.11"
-pytube = "==9.5.3"
+pytube = {git = "https://github.com/swiftyy-mage/pytube.git"}
 psycopg2 = "*"
 
 [requires]
