@@ -10,7 +10,7 @@ chardet==3.0.4
 click==7.0
 discord.py==1.2.5
 discord==1.0.1
-git+https://github.com/swiftyy-mage/pytube.git@bceb929e143caadd874955fa422f8a58955bafaf#egg=pytube
+git+https://github.com/swiftyy-mage/pytube.git#egg=pytube
 idna==2.8
 importlib-metadata==1.4.0 ; python_version < '3.8'
 kombu==4.6.7
