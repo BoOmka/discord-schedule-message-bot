@@ -30,6 +30,7 @@ async def delay(ctx, channel: typing.Optional[TextChannel], countdown_minutes: i
         args=(channel.id, ctx.message.author.id, message),
         countdown=countdown_td.seconds,
     )
+    await ctx.message.delete()
 
 
 @scheduler.command(aliases=['yt'])
@@ -40,6 +41,8 @@ async def youtube(ctx, channel: typing.Optional[TextChannel], youtube_url: str, 
 
     tasks.send_message_yt.apply_async(
         args=(channel.id, ctx.message.author.id, youtube_url, resolution))
+
+    await ctx.message.delete()
 
 
 @bot.command()
