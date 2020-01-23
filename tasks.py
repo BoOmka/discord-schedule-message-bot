@@ -45,15 +45,8 @@ def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, des
             author_id=author_id,
             message=error_message,
         ))
-    except (AssertionError, VideoUnavailable):
+    except (AssertionError, VideoUnavailable, KeyError):
         raise self.retry(countdown=YT_RETRY_COUNTDOWN, max_retries=YT_MAX_RETRIES)
-    except KeyError:
-        error_message = "Pytube can't parse resolutions form this video: " + youtube_url
-        asyncio.run(_send_message(
-            channel_id=channel_id,
-            author_id=author_id,
-            message=error_message,
-        ))
 
 
 def parse_resolution(resolution: str) -> int:
