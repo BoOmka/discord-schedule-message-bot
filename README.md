@@ -14,6 +14,7 @@ A Discord bot for scheduling and delaying user messages.
     ```
    
 1. Start RabbitMQ:
+
     This is subject to change due to security vulnerability
     ```shell script
     docker run -d -p 15672:15672 -p 5672:5672 --name some-lovely-name-for-rabbit rabbitmq:3
