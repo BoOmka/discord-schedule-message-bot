@@ -9,7 +9,7 @@ import config
 from config import YT_RETRY_COUNTDOWN, YT_MAX_RETRIES
 from utils import get_discord_client
 
-app = Celery(main='messages', broker=config.CELERY_BROKER_URL, backend=config.CELERY_RESULT_BACKEND)
+app = Celery(main='messages', broker=config.CELERY_BROKER_URL)
 
 
 @app.task(name='celery_tasks.send_message')

@@ -1,3 +1,5 @@
+import logging
+
 import click
 
 import config
@@ -19,6 +21,7 @@ def start_server():
 @cli.command()
 def start_celery_worker():
     app.worker_main(argv=click.get_os_args())
+    app.worker_main.loglevel = logging.DEBUG
 
 
 if __name__ == '__main__':
