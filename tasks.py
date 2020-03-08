@@ -39,12 +39,14 @@ def send_message_yt(self, channel_id: int, author_id: int, youtube_url: str, des
             message=youtube_url,
         ))
     except RegexMatchError:
-        error_message = "Video not found by url: " + youtube_url
+        error_message = f"Video not found by url: {youtube_url}"
         asyncio.run(_send_message(
             channel_id=channel_id,
             author_id=author_id,
             message=error_message,
         ))
+        # task has to be marked as failed to break task chains
+        raise Exception(error_message)
     except (AssertionError, VideoUnavailable, KeyError):
         raise self.retry(countdown=YT_RETRY_COUNTDOWN, max_retries=YT_MAX_RETRIES)
 
