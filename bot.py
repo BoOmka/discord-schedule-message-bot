@@ -43,9 +43,10 @@ async def youtube(ctx,
     if channel is None:
         channel = ctx.message.channel
 
+    link = tasks.send_message.si(channel.id, ctx.message.author.id, comment) if comment else None
     tasks.send_message_yt.apply_async(
         args=(channel.id, ctx.message.author.id, youtube_url, resolution),
-        link=tasks.send_message.si(channel.id, ctx.message.author.id, comment)
+        link=link
     )
 
     await ctx.message.delete()
