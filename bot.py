@@ -38,6 +38,7 @@ async def youtube(ctx,
                   channel: typing.Optional[TextChannel],
                   youtube_url: str,
                   resolution: typing.Optional[int] = 720,
+                  *,
                   comment: typing.Optional[str] = ''):
     """Schedules YT video until desired resolution becomes available"""
     if channel is None:
