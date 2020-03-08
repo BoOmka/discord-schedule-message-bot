@@ -34,13 +34,19 @@ async def delay(ctx, channel: typing.Optional[TextChannel], countdown_minutes: i
 
 
 @scheduler.command(aliases=['yt'])
-async def youtube(ctx, channel: typing.Optional[TextChannel], youtube_url: str, resolution: typing.Optional[int] = 720):
+async def youtube(ctx,
+                  channel: typing.Optional[TextChannel],
+                  youtube_url: str,
+                  resolution: typing.Optional[int] = 720,
+                  comment: typing.Optional[str] = ''):
     """Schedules YT video until desired resolution becomes available"""
     if channel is None:
         channel = ctx.message.channel
 
     tasks.send_message_yt.apply_async(
-        args=(channel.id, ctx.message.author.id, youtube_url, resolution))
+        args=(channel.id, ctx.message.author.id, youtube_url, resolution),
+        link=tasks.send_message.si(channel.id, ctx.message.author.id, comment)
+    )
 
     await ctx.message.delete()
 
