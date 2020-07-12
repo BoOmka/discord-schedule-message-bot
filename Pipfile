@@ -12,8 +12,8 @@ discord = {py = "==1.2.4"}
 python-decouple = "==3.3"
 click = "==7.0"
 celery = "==4.3.0"
-pytube3 = "*"
 psycopg2 = "*"
+pytube3 = ">=9.6.4"
 
 [requires]
 python_version = "3.7"
