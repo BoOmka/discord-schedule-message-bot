@@ -5,7 +5,7 @@ services:
     image: rabbitmq:3.8.5-alpine
     restart: always
   celery:
-    container_name: "discord_bot-rabbitmq"
+    container_name: "discord_bot-celery"
     build: .
     restart: always
     depends_on:
