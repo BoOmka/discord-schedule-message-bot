@@ -5,5 +5,6 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 COPY . /app
 
 WORKDIR /app
+ENV PYTHONPATH "${PYTHONPATH}:/app"
 
 RUN pip install -r requirements.txt
