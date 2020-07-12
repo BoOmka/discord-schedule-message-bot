@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  rabbitmq:
+    container_name: "discord_bot-rabbitmq"
+    image: rabbitmq:3.8.5-alpine
+    restart: always
+  celery:
+    container_name: "discord_bot-rabbitmq"
+    build: .
+    restart: always
+    depends_on:
+      - rabbitmq
+    working_dir: "/app"
+    command: ["./wait-for-it.sh", "rabbitmq:5432", "--", "python -Om cli.py start_celery_worker"]
+  bot:
+    container_name: "discord_bot-bot"
+    restart: always
+    build: .
+    depends_on:
+      - rabbitmq
+      - celery
+    working_dir: "/app"
+    command: ["./wait-for-it.sh", "rabbitmq:5432", "--", "python -Om cli.py start_server"]

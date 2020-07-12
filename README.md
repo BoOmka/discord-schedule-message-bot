@@ -29,3 +29,9 @@ A Discord bot for scheduling and delaying user messages.
     ```shell script
     python cli.py start_server
     ```
+
+## Alternative setup
+1. Start a docker-compose:
+    ```shell script
+    docker-compose up -d
+    ```
