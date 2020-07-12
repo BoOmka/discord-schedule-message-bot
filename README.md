@@ -22,12 +22,12 @@ A Discord bot for scheduling and delaying user messages.
 
 1. Start Celery worker:
     ```shell script
-    python cli.py start_celery_worker
+    python cli.py start-celery-worker
     ```
 
 1. Start a server:
     ```shell script
-    python cli.py start_server
+    python cli.py start-server
     ```
 
 ## Alternative setup
