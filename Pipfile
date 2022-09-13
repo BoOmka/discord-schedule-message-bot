@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-flower = "==0.9.3"
+flower = "==1.2.0"
 
 [packages]
 attrdict = "==2.0.1"
